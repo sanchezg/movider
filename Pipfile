@@ -1,0 +1,17 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+djangorestframework = "==3.9.0"
+pipenv = "==2018.11.26"
+pytz = "==2018.7"
+virtualenv = "==16.1.0"
+virtualenv-clone = "==0.4.0"
+Django = "==2.1.4"
+
+[requires]
+python_version = "3.7"
