@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.gis',
+    'rest_framework',
+    'providers',
 ]
 
 MIDDLEWARE = [
@@ -74,9 +77,17 @@ WSGI_APPLICATION = 'movider.wsgi.application'
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
+    'test': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    },
+    'default': {
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'NAME': 'gis',
+        'USER': 'pgadmin',
+        'PASSWORD': 'secretpassword',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -118,3 +129,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Project common settings
+
+MAX_CHAR_LENGTH = 255

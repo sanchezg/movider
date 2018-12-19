@@ -12,6 +12,9 @@ pytz = "==2018.7"
 virtualenv = "==16.1.0"
 virtualenv-clone = "==0.4.0"
 Django = "==2.1.4"
+psycopg2 = "*"
+djangorestframework-gis = "*"
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"
