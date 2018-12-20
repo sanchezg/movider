@@ -1,8 +1,10 @@
-import factory
 import random
 
 from django.conf.global_settings import LANGUAGES
 from django.contrib.gis.geos import Polygon
+
+import factory
+
 from providers import models
 
 

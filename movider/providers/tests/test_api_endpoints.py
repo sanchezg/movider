@@ -1,9 +1,12 @@
+from unittest import skip
+
 from django.contrib.gis.geos import Polygon
 from django.core.serializers import serialize
 from django.urls import reverse
+
 from rest_framework import status
+from rest_framework.exceptions import ErrorDetail
 from rest_framework.test import APIClient, APITestCase
-from unittest import skip
 
 from providers.models import Currency, Provider, ServiceArea
 
@@ -129,3 +132,69 @@ class ServiceAreaTests(APITestCase):
         response = self.client.delete(url, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(ServiceArea.objects.count(), 0)
+
+
+class ServiceAreasListTests(APITestCase):
+    def setUp(self):
+        self.service_area = ServiceAreaFactory(name='Test Area')
+        self.url = reverse("servicesareas_by_location")
+
+    def test_latitude_required(self):
+        data = {'longitude': .1}
+        response = self.client.get(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error_message = {'latitude': [ErrorDetail(string='This field is required.', code='required')]}
+        self.assertEqual(response.data, error_message)
+
+    def test_longitude_required(self):
+        data = {'latitude': .1}
+        response = self.client.get(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        error_message = {'longitude': [ErrorDetail(string='This field is required.', code='required')]}
+        self.assertEqual(response.data, error_message)
+
+    def test_invalid_latitude_values(self):
+        INVALID_LATITUDES = [
+            {'value': -90.1,
+             'error_message': 'Ensure this value is greater than or equal to -90.0.', 'code': 'min_value'},
+            {'value': 90.1,
+             'error_message': 'Ensure this value is less than or equal to 90.0.', 'code': 'max_value'},
+        ]
+        for lat in INVALID_LATITUDES:
+            data = {'latitude': lat['value'], 'longitude': 0.}
+            response = self.client.get(self.url, data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            error_message = {
+                'latitude': [ErrorDetail(string=lat['error_message'], code=lat['code'])]
+            }
+            self.assertEqual(response.data, error_message)
+
+    def test_invalid_longitude_values(self):
+        INVALID_LONGITUDES = [
+            {'value': -180.1,
+             'error_message': 'Ensure this value is greater than or equal to -180.0.', 'code': 'min_value'},
+            {'value': 180.1,
+             'error_message': 'Ensure this value is less than or equal to 180.0.', 'code': 'max_value'},
+        ]
+        for lng in INVALID_LONGITUDES:
+            data = {'latitude': 0., 'longitude': lng['value']}
+            response = self.client.get(self.url, data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            error_message = {
+                'longitude': [ErrorDetail(string=lng['error_message'], code=lng['code'])]
+            }
+            self.assertEqual(response.data, error_message)
+
+    def test_valid_coordinates_within_a_service_area(self):
+        """Validate that the API answer with the object when a ServiceArea is found for the required location."""
+        data = {'latitude': .5, 'longitude': .5}
+        response = self.client.get(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['id'], self.service_area.id)
+
+    def test_valid_coordinates_without_a_service_area(self):
+        """Validate that the API answer with 404 when a ServiceArea isn't found for the required location."""
+        data = {'latitude': 5., 'longitude': 5.}
+        response = self.client.get(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
