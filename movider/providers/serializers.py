@@ -27,3 +27,10 @@ class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
         fields = '__all__'
+
+
+class CoordinateSerializer(serializers.Serializer):
+    """Validate latitude and longitude values from request."""
+
+    latitude = serializers.FloatField(min_value=-90.0, max_value=90.0)
+    longitude = serializers.FloatField(min_value=-180.0, max_value=180.0)

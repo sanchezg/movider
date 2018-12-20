@@ -3,18 +3,18 @@ from rest_framework import filters, viewsets
 from rest_framework.response import Response
 
 from .models import Currency, Provider, ServiceArea
-from .serializers import CurrencySerializer, ProviderSerializer, ServiceAreaSerializer
+from .serializers import (CoordinateSerializer, CurrencySerializer, ProviderSerializer,
+                          ServiceAreaSerializer)
 
 
 class ProviderIsInPolygonFilterBackend(filters.BaseFilterBackend):
-    """
-    Filter that only allows users to see their own objects.
-    """
+    """Filter Providers that have service areas in the provided geo point."""
+
     def filter_queryset(self, request, queryset, view):
-        lat = request.query_params.get('latitude')
-        lng = request.query_params.get('longitude')
-        if lat is not None and lng is not None:
-            geo_point = Point(float(lat), float(lng))
+        coords = CoordinateSerializer(data=request.query_params)
+        if coords.is_valid():
+            lat, lng = coords.validated_data.values()
+            geo_point = Point(lat, lng)
             provider_ids = ServiceArea.objects.filter(polygon__contains=geo_point).values('provider_id')
             queryset = queryset.filter(id__in=provider_ids)
         return queryset
