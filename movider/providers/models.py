@@ -17,9 +17,9 @@ class Provider(models.Model):
     """Represent a Provider."""
 
     name = models.CharField("Name", max_length=settings.MAX_CHAR_LENGTH)
-    email = models.EmailField("EMail", unique=True, max_length=settings.MAX_CHAR_LENGTH)
+    email = models.EmailField("e-mail", unique=True, max_length=settings.MAX_CHAR_LENGTH)
     phone_number = models.CharField("Phone number", max_length=settings.MAX_CHAR_LENGTH)
-    language = models.CharField("Language", max_length=10, choices=LANGUAGES, default='en')
+    language = models.CharField("Language", max_length=50, choices=LANGUAGES, default='en')
     currency = models.ForeignKey("Currency", related_name='providers', on_delete=models.SET_DEFAULT, default='')
 
     def __str__(self):
@@ -32,7 +32,7 @@ class ServiceArea(models.Model):
     provider = models.ForeignKey('Provider', on_delete=models.CASCADE, related_name='service_areas')
     name = models.CharField("Name", max_length=settings.MAX_CHAR_LENGTH)
     price = models.DecimalField("Price", max_digits=100, decimal_places=2)
-    polygon = models.PolygonField("Polygon", geography=True)
+    polygon = models.PolygonField("Polygon")
 
     def __str__(self):
         return "{} - {}".format(self.provider.name, self.name)

@@ -72,6 +72,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'movider.wsgi.application'
 
+# Filters backend
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
+
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases

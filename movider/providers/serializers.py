@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
-from .models import Provider, ServiceArea
+from .models import Currency, Provider, ServiceArea
 
 
 class ProviderSerializer(serializers.ModelSerializer):
@@ -9,7 +9,7 @@ class ProviderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Provider
-        fields = '__all__'
+        fields = ('name', 'email', 'phone_number', 'language', 'currency')
 
 
 class ServiceAreaSerializer(GeoFeatureModelSerializer):
@@ -18,4 +18,12 @@ class ServiceAreaSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = ServiceArea
         geo_field = "polygon"
+        fields = '__all__'
+
+
+class CurrencySerializer(serializers.ModelSerializer):
+    """Serializer for Currency data."""
+
+    class Meta:
+        model = Currency
         fields = '__all__'
