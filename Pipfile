@@ -16,6 +16,8 @@ psycopg2 = "*"
 djangorestframework-gis = "*"
 psycopg2-binary = "*"
 django-filter = "*"
+ipython = "*"
+factory-boy = "*"
 
 [requires]
 python_version = "3.7"
