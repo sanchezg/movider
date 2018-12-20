@@ -48,3 +48,8 @@ movider/ $ python manage.py migrate
 movider/utils/ $ python populate_db.py
 ```
 
+You will see the following message:
+
+```
+Succesfully created 35 instances!
+```

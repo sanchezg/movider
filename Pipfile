@@ -15,6 +15,7 @@ Django = "==2.1.4"
 psycopg2 = "*"
 djangorestframework-gis = "*"
 psycopg2-binary = "*"
+django-filter = "*"
 
 [requires]
 python_version = "3.7"
