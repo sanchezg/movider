@@ -5,17 +5,17 @@ import sys
 sys.path.append('../')
 os.environ['DJANGO_SETTINGS_MODULE'] = 'movider.settings'
 
-import django  # No QA
+import django  # noqa
 
-from django.conf.global_settings import LANGUAGES
-from django.contrib.gis.geos import Polygon
+from django.conf.global_settings import LANGUAGES  # noqa
+from django.contrib.gis.geos import Polygon  # noqa
 
 django.setup()
 
-from providers.models import Currency, Provider, ServiceArea  # No QA
+from providers.models import Currency, Provider, ServiceArea  # noqa
 
 currencies_mocks = [
-    # Basic currencies, more can be added then
+    # Basic currencies, more can be added then
     Currency(code='ARS', description='Argentine Pesos'),
     Currency(code='AUD', description='Australian Dollars'),
     Currency(code='BOB', description='Bolivian'),
@@ -41,19 +41,19 @@ Currency.objects.bulk_create(currencies_mocks)
 
 providers_mocks = [
     Provider(name='Fake provider 1', email='prov1@email.com', phone_number='123-456-71',
-             language=random.choice(LANGUAGES),
+             language=random.choice(LANGUAGES)[0],
              currency=Currency.objects.get(id=random.randint(1, len(currencies_mocks)))),
     Provider(name='Fake provider 2', email='prov2@email.com', phone_number='123-456-72',
-             language=random.choice(LANGUAGES),
+             language=random.choice(LANGUAGES)[0],
              currency=Currency.objects.get(id=random.randint(1, len(currencies_mocks)))),
     Provider(name='Fake provider 3', email='prov3@email.com', phone_number='123-456-73',
-             language=random.choice(LANGUAGES),
+             language=random.choice(LANGUAGES)[0],
              currency=Currency.objects.get(id=random.randint(1, len(currencies_mocks)))),
     Provider(name='Fake provider 4', email='prov4@email.com', phone_number='123-456-74',
-             language=random.choice(LANGUAGES),
+             language=random.choice(LANGUAGES)[0],
              currency=Currency.objects.get(id=random.randint(1, len(currencies_mocks)))),
     Provider(name='Fake provider 5', email='prov5@email.com', phone_number='123-456-75',
-             language=random.choice(LANGUAGES),
+             language=random.choice(LANGUAGES)[0],
              currency=Currency.objects.get(id=random.randint(1, len(currencies_mocks)))),
 ]
 Provider.objects.bulk_create(providers_mocks)

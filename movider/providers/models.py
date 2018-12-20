@@ -1,5 +1,5 @@
-from django.conf.global_settings import LANGUAGES
 from django.conf import settings
+from django.conf.global_settings import LANGUAGES
 from django.contrib.gis.db import models
 
 

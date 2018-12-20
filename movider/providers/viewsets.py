@@ -1,6 +1,6 @@
 from django.contrib.gis.geos import Point
+
 from rest_framework import filters, viewsets
-from rest_framework.response import Response
 
 from .models import Currency, Provider, ServiceArea
 from .serializers import (CoordinateSerializer, CurrencySerializer, ProviderSerializer,
