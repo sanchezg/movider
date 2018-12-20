@@ -15,8 +15,6 @@ class CurrencySerializer(serializers.ModelSerializer):
 class ProviderSerializer(serializers.ModelSerializer):
     """Serializer for Providers."""
 
-    currency = CurrencySerializer()
-
     class Meta:
         model = Provider
         fields = ('name', 'email', 'phone_number', 'language', 'currency')
@@ -24,8 +22,6 @@ class ProviderSerializer(serializers.ModelSerializer):
 
 class ServiceAreaSerializer(GeoFeatureModelSerializer):
     """Serializer for Service Areas."""
-
-    provider = ProviderSerializer()
 
     class Meta:
         model = ServiceArea
