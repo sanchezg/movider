@@ -18,13 +18,17 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers
 
-from providers import viewsets
+from providers import views, viewsets
 
 router = routers.DefaultRouter()
+router.register(r'currencies', viewsets.CurrencyViewSet)
 router.register(r'providers', viewsets.ProviderViewSet)
 router.register(r'serviceareas', viewsets.ServiceAreaViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/v0/', include(router.urls)),
+    url(r'^api/v0/servicesareas_by_location/$',
+        views.ServiceAreasList.as_view(),
+        name="servicesareas_by_location"),
 ]
