@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '2on@4^b876&1!a%7=rh)!c299v4((7nsho((wz5chbhn-%q%=o'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,7 +72,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'movider.wsgi.application'
 
-# Filters backend
+# Filters backend
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
@@ -81,16 +81,7 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'gis',
-        'USER': 'pgadmin',
-        'PASSWORD': 'secretpassword',
-        'HOST': 'localhost',
-        'PORT': '5432'
-    }
-}
+DATABASES = None  # Database settings in local_settings.py
 
 
 # Password validation
@@ -129,9 +120,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "/static/"
 
 # Project common settings
 
 MAX_CHAR_LENGTH = 255
+
+try:
+    from .local_settings import *  # noqa
+except ImportError:
+    # local development settings
+    pass

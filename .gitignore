@@ -102,3 +102,6 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# local (development/production) settings
+movider/movider/local_settings.py
