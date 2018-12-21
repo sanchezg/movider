@@ -1,5 +1,5 @@
 # movider
-An API to serve providers data and functions
+An API to serve providers data and functions.
 
 ## Introduction
 
@@ -21,24 +21,54 @@ movider/ $ python manage.py test
 - Some models and fields can be improved using validators (for example `phone_number`, `email`, etc).
 - Project hasn't authentication, it can be added with more time (some options include json-web-token).
 - Coding style was mostly written folowing pep8 and pycodestyle suggestions, but some issues can be found.
-- Due to serializer issues, some ServiceArea endpoint tests are broken, they were marked with skip to not show errors
-on development stage.
+- Due to serializer issues, some ServiceArea endpoint unit tests are broken, they were marked with skip to not show
+errors on development stage.
+- The application has been developed using Python 3.7.0. There aren't big changes with any version up to 3.5+.
+But I can't ensure that the other used packages will work well with those versions.
+- The application was deployed using a very basic approach (download in the server, and install). CI/CD can be helpful
+here.
 
-## Installation
+## Deployment/Installation notes
 
-1. Clone or download this repo
+The application is deployed on a public AWS EC2 instance with Ubuntu 18.04.
+You can access to it using the following URL: <PRIVATE>.
 
-2. Install `pyenv` and `Pipenv`
+**Steps**
+
+Following steps are for an equivalent system to the one used in the deploy.
+
+1. Make sure you have all necessary to build and run your application:
+
+```
+$ sudo apt-get install build-essential libsqlite3-dev sqlite3 \
+    bzip2 libbz2-dev zlib1g-dev libssl-dev openssl libgdbm-dev \
+    libgdbm-compat-dev liblzma-dev libreadline-dev libncursesw5-dev libffi-dev uuid-dev \
+    apt-transport-https ca-certificates curl software-properties-common \
+    git
+```
+
+2. Install Python and dependencies
+
+- Install `pyenv` and Python 3.7.0: https://github.com/pyenv/pyenv#installation
+- Install `Pipenv`:
+
+```
+$ pip install -U pip
+$ pip install pipenv
+```
+
+- Install dependencies:
+
+```
+$ pipenv install
+```
 
 3. Install GEOS, PROJ.4 and GDAL for the proper working with PostGIS:
 
 On Ubuntu:
 
 ```
-$ sudo apt-get install libgeos-dev
-$ sudo apt-get install binutils libproj-dev
-$ sudo apt-get install gdal-bin libgdal-dev
-$ sudo apt-get install python3-gdal
+$ sudo apt-get install libgeos-dev binutils libproj-dev gdal-bin libgdal-dev python3-gdal
 ```
 
 On macOS:
@@ -48,6 +78,8 @@ $ brew install geos
 $ brew install proj
 $ brew install gdal2
 ```
+
+3. Install Docker (for the DB) using your preferred method.
 
 4. Pull a PostGIS container:
 
@@ -63,17 +95,16 @@ $ docker run --name=postgis -d -e POSTGRES_USER=pgadmin \
 
 Notice that you must create a persistant volume to keep database data.
 
-
 5. Migrate the Django App:
 
 ```
-movider/ $ python manage.py migrate
+movider/ $ pipenv run python manage.py migrate
 ```
 
 6. [OPTIONAL] Load database with pre-computed data:
 
 ```
-movider/utils/ $ python populate_db.py
+movider/utils/ $ pipenv run python populate_db.py
 ```
 
 You will see the following message:
@@ -87,7 +118,7 @@ Succesfully created 35 instances!
 Run the local development server with:
 
 ```
-movider/ $ python manage.py runserver
+movider/ $ pipenv python manage.py runserver
 ```
 
 ## Usage
@@ -98,7 +129,7 @@ movider/ $ python manage.py runserver
 curl -i -X POST \
    -H "Content-Type:application/json" \
    -d '{"code": "USD", "description": "US Dollars"}' \
- 'http://<server_address>/api/v0/currencies/'
+ 'http://<SERVER_ADDRESS>/api/v0/currencies/'
 ```
 
 **Create a new provider**
@@ -112,10 +143,10 @@ curl -i -X POST \
   "email": "info@newprovider.com",
   "phone_number": "+1 234 5678",
   "language": "en",
-  "currency": "http://<server_address>/api/v0/currencies/1/",
+  "currency": "http://<SERVER_ADDRESS>/api/v0/currencies/1/",
   "service_areas": []
 }' \
- 'http://<server_address>/api/v0/providers/'
+ 'http://<SERVER_ADDRESS>/api/v0/providers/'
 ```
 
 **Create a new service area**
@@ -131,11 +162,11 @@ curl \
             [ [10.0, 20.0], [15.0, 20.0], [15.0, 35.0],
               [10.0, 35.0], [10.0, 20.0] ]
         ], "type": "Polygon"}'  \
- 'http://<server_address>/api/v0/serviceareas/'
+ 'http://<SERVER_ADDRESS>/api/v0/serviceareas/'
 ```
 
 **Retrieve service areas for a current geo point (pair of 'latitude, longitude')**
 
 ```
-curl -i -X GET 'http://<server_address>/api/v0/serviceareas_by_location/?latitude=1.0&longitude=1.0'
+curl -i -X GET 'http://<SERVER_ADDRESS>/api/v0/serviceareas_by_location/?latitude=1.0&longitude=1.0'
 ```
