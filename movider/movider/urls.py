@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
+
 from rest_framework import routers
 
 from providers import views, viewsets
@@ -28,7 +29,7 @@ router.register(r'serviceareas', viewsets.ServiceAreaViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^api/v0/', include(router.urls)),
-    url(r'^api/v0/servicesareas_by_location/$',
+    url(r'^api/v0/serviceareas_by_location/$',
         views.ServiceAreasList.as_view(),
-        name="servicesareas_by_location"),
+        name="serviceareas_by_location"),
 ]
